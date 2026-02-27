@@ -13,6 +13,7 @@ export interface PromptTemplate {
 export interface ExtractedItem {
   keyword: string;
   quote: string;
+  confidence?: number;
 }
 
 export interface Paper {

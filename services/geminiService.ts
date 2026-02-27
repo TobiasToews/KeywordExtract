@@ -1,5 +1,5 @@
 
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { PromptTemplate, ExtractedItem, AnalysisResult } from "../types";
 
 export const runAnalysis = async (
@@ -17,17 +17,61 @@ export const runAnalysis = async (
   
   const prompt = template.user_template.replace('{text}', paperText);
 
+  // Define the schema for structured JSON output
+  const schema: Schema = {
+    type: Type.OBJECT,
+    properties: {
+      items: {
+        type: Type.ARRAY,
+        items: {
+          type: Type.OBJECT,
+          properties: {
+            keyword: { 
+              type: Type.STRING, 
+              description: "The extracted atomic concept or keyword." 
+            },
+            quote: { 
+              type: Type.STRING, 
+              description: "The exact verbatim quote from the text supporting the keyword." 
+            },
+            confidence: { 
+              type: Type.NUMBER, 
+              description: "A score between 0.0 and 1.0 indicating confidence that the quote is an exact match and highly relevant." 
+            }
+          },
+          required: ["keyword", "quote", "confidence"]
+        }
+      }
+    },
+    required: ["items"]
+  };
+
   const response = await ai.models.generateContent({
     model: modelName,
     contents: prompt,
     config: {
       systemInstruction: template.system,
-      temperature: 0.1, // Low temperature for high precision extraction
+      temperature: 0.1, // Low temperature for factual extraction
+      responseMimeType: "application/json",
+      responseSchema: schema
     }
   });
 
-  const rawText = response.text || "";
-  const { parsedItems, errors } = parseModelOutput(rawText);
+  const rawText = response.text || "{}";
+  let parsedItems: ExtractedItem[] = [];
+  let errors: string[] = [];
+
+  try {
+    const jsonResponse = JSON.parse(rawText);
+    if (jsonResponse.items && Array.isArray(jsonResponse.items)) {
+      parsedItems = jsonResponse.items;
+    } else {
+      errors.push("Model returned valid JSON but missing 'items' array.");
+    }
+  } catch (e: any) {
+    errors.push(`JSON Parse Error: ${e.message}`);
+    console.error("Failed to parse JSON response:", rawText);
+  }
 
   return {
     paperId,
@@ -38,47 +82,4 @@ export const runAnalysis = async (
     model: modelName,
     errors: errors.length > 0 ? errors : undefined
   };
-};
-
-const parseModelOutput = (text: string): { parsedItems: ExtractedItem[], errors: string[] } => {
-  const lines = text.split('\n').filter(line => line.trim() !== '');
-  const parsedItems: ExtractedItem[] = [];
-  const errors: string[] = [];
-
-  lines.forEach((line, index) => {
-    const trimmedLine = line.trim();
-    if (!trimmedLine) return;
-
-    // Handle specialized "YES/NO" starts by simply skipping the header line for item extraction
-    if (trimmedLine.toUpperCase() === 'YES' || trimmedLine.toUpperCase() === 'NO') {
-      return;
-    }
-
-    const parts = line.split('|');
-    if (parts.length === 2) {
-      const keyword = parts[0].trim();
-      let quote = parts[1].trim();
-      
-      // Clean up quotes
-      if (quote.startsWith('"') && quote.endsWith('"')) {
-        quote = quote.substring(1, quote.length - 1);
-      } else if (quote.startsWith('\"') && quote.endsWith('\"')) {
-        quote = quote.substring(1, quote.length - 1);
-      }
-      
-      if (keyword && quote) {
-        parsedItems.push({ keyword, quote });
-      } else {
-        errors.push(`Line ${index + 1}: Missing keyword or quote content.`);
-      }
-    } else {
-      // Ignore common model conversational markers, but log unexpected format issues
-      const isNoise = trimmedLine.startsWith('---') || trimmedLine.startsWith('***') || trimmedLine.startsWith('#');
-      if (!isNoise) {
-         errors.push(`Line ${index + 1}: Incorrect format (expected one '|').`);
-      }
-    }
-  });
-
-  return { parsedItems, errors };
 };

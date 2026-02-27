@@ -99,13 +99,14 @@ const App: React.FC = () => {
   };
 
   const exportToCsv = () => {
-    const headers = ['Paper ID', 'Prompt ID', 'Keyword', 'Quote', 'Model', 'Timestamp'];
+    const headers = ['Paper ID', 'Prompt ID', 'Keyword', 'Quote', 'Confidence', 'Model', 'Timestamp'];
     const rows = results.flatMap(res => 
       res.parsedItems.map(item => [
         res.paperId,
         res.promptId,
         item.keyword,
         `"${item.quote.replace(/"/g, '""')}"`,
+        item.confidence?.toFixed(2) || 'N/A',
         res.model,
         res.timestamp
       ])
@@ -290,7 +291,9 @@ const App: React.FC = () => {
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                       </div>
                     </div>
-                    <p className="text-sm text-slate-600 mb-6 flex-1 line-clamp-3">{template.system}</p>
+                    <p className="text-sm text-slate-600 mb-6 flex-1 line-clamp-3">
+                      {template.user_template.match(/TASK: (.*)/)?.[1] || template.system}
+                    </p>
                     <button 
                       onClick={() => runBatchAnalysis(template.id)}
                       disabled={isProcessing || papers.length === 0}
@@ -331,11 +334,31 @@ const App: React.FC = () => {
                 <div className="space-y-12">
                   {results.map((res, i) => {
                     const paper = papers.find(p => p.id === res.paperId);
+                    const promptTemplate = PROMPT_TEMPLATES.find(t => t.id === res.promptId);
+                    
                     return (
                       <div key={i} className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                        <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-                          <h4 className="font-bold text-slate-900 truncate pr-4">{paper?.fileName || 'Unknown Paper'}</h4>
-                          <span className="shrink-0 text-xs font-mono text-slate-500">{res.model}</span>
+                        <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                          <div>
+                            <h4 className="font-bold text-slate-900 truncate text-lg mb-1">{paper?.fileName || 'Unknown Paper'}</h4>
+                            <div className="flex items-center space-x-2">
+                              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Prompt:</span>
+                              <span className="text-xs font-medium text-blue-700 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded">
+                                {promptTemplate?.name || res.promptId}
+                              </span>
+                              <span className="text-[10px] text-slate-400 font-mono">({res.promptId})</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-6 shrink-0">
+                             <div>
+                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Model</div>
+                                <div className="text-xs font-mono text-slate-600">{res.model}</div>
+                             </div>
+                             <div>
+                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Time</div>
+                                <div className="text-xs font-mono text-slate-600">{new Date(res.timestamp).toLocaleTimeString()}</div>
+                             </div>
+                          </div>
                         </div>
                         <div className="p-6">
                            {res.errors && res.errors.length > 0 && (
@@ -352,6 +375,15 @@ const App: React.FC = () => {
                                  <div className="md:w-1/4 shrink-0">
                                    <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Keyword</div>
                                    <div className="font-bold text-blue-700">{item.keyword}</div>
+                                   {item.confidence !== undefined && (
+                                     <div className={`mt-2 inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                                       item.confidence > 0.8 ? 'bg-green-100 text-green-800' : 
+                                       item.confidence > 0.5 ? 'bg-yellow-100 text-yellow-800' : 
+                                       'bg-red-100 text-red-800'
+                                     }`}>
+                                       Conf: {(item.confidence * 100).toFixed(0)}%
+                                     </div>
+                                   )}
                                  </div>
                                  <div className="flex-1">
                                    <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Verbatim Quote</div>
