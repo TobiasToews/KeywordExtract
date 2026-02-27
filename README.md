@@ -1,8 +1,8 @@
-# AffordanceFlow: Academic Extraction Pipeline
+# KeywordExtract: Academic Extraction Pipeline
 
-AffordanceFlow is a specialized research tool designed to ingest academic PDF papers and extract structured data regarding **object affordances**, **robotics**, **LLMs/VLMs**, and **safety** using Google's Gemini 3 Flash model.
+KeywordExtract is a research tool designed to ingest academic PDF papers and extract structured data regarding **object affordances**, **robotics**, **LLMs/VLMs**, and **safety** using Google's Gemini 3 Flash model.
 
-It automates the literature review process by running versioned prompt templates against uploaded papers to answer specific research questions (RQs).
+It automates the literature mapping process by running prompt templates against uploaded papers to extract keywords and help therefore with the classification process in a Systematic Mapping Study.
 
 ## Key Features
 
