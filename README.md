@@ -1,8 +1,8 @@
 # KeywordExtract: Academic Extraction Pipeline
 
-KeywordExtract is a research tool designed to ingest academic PDF papers and extract structured data regarding **object affordances**, **robotics**, **LLMs/VLMs**, and **safety** using Google's Gemini 3 Flash model.
+KeywordExtract is a specialized research tool designed to ingest academic PDF papers and extract structured data regarding **object affordances**, **robotics**, **LLMs/VLMs**, and **safety** using Google's Gemini 3 Flash model.
 
-It automates the literature mapping process by running prompt templates against uploaded papers to extract keywords and help therefore with the classification process in a Systematic Mapping Study.
+It automates the literature review process by running versioned prompt templates against uploaded papers to answer specific research questions (RQs).
 
 ## Key Features
 
@@ -19,6 +19,10 @@ It automates the literature mapping process by running prompt templates against 
 2.  **Select Prompt**: Navigate to the **Prompt Library** to choose a specific extraction goal (e.g., "Extract Dataset Limitations").
 3.  **Run Analysis**: The system processes the text of each paper through the Gemini API.
 4.  **Review & Export**: View the extracted keywords, quotes, and confidence scores in the **Results** view, then export to CSV/JSONL.
+
+## Running Locally
+
+To run this application on your own machine (to avoid cloud timeouts), see [README_LOCAL.md](./README_LOCAL.md).
 
 ## Research Scope
 

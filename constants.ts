@@ -373,9 +373,10 @@ PROCEDURE:
   // for A3VLM: returend
   // for "Affordance Grounding from Demonstration": returned 
   // for "Affordance-Based_Goal_Imagination_for_Embodied_AI_Agents.pdf": returned 
-  // conclusion: 
+  // conclusion: -> seems good
 
-  // Test here if the Name of limitation and Name of Dataset works
+  // Test here if the Name of limitation and Name of Dataset works 
+  //-> Tries to include the name of the dataset into the keyword, but doesnt do it all the time Doesnt extract the name of the dataset 
   {
     id: "RQ3_LIMITATIONS_V1",
     name: "RQ3: Dataset Limitations",
@@ -405,11 +406,13 @@ PROCEDURE:
     max_items: 5
   },
   // TEST:
-  // For 3D-AffordanceLLM: retuned 
-  // for A3VLM: returend
-  // for "Affordance Grounding from Demonstration": returned 
-  // for "Affordance-Based_Goal_Imagination_for_Embodied_AI_Agents.pdf": returned 
-  // conclusion:   
+  // For 3D-AffordanceLLM: returned the query instruction 
+  // for A3VLM: returend bullshit
+  // for "Affordance Grounding from Demonstration": returned nothing
+  // for "Affordance-Based_Goal_Imagination_for_Embodied_AI_Agents.pdf": returned somewhats okish result -> gave one promt
+  // conclusion: not so sure how reliable it is
+
+  // -> maybe continoue searching? 
   {
     id: "RQ3_STRATEGIES_V1",
     name: "RQ3: Prompting Strategies",
@@ -430,8 +433,8 @@ TASK: Identify the promping techniques to query affordance used in this paper, w
 SCOPE: Concepts describing prompting strategies used to query or elicit affordance information from LLMs/VLMs.
 EXCLUDE: Datasets, Architectures, non Prompting related Topics
 PROCEDURE:
-1. Scan for passages describing prompting strategies used with LLMs/VLMs.
-2. Select at most 5 prompting strategies used to query affordances form LLMs/VLMs, but if there are non described in the text just return "None found".
+1. Scan for passages describing prompting techniques used with LLMs/VLMs, which searches for affordances.
+2. Select at most 5 prompting techniques used to query affordances form LLMs/VLMs, but if there are non described in the text just return "None found".
 3. Reduce each prompting technique to a keyword/noun phrase including its exact substring from the text.
     `,
     expected_format: "JSON",
@@ -443,7 +446,8 @@ PROCEDURE:
   // for A3VLM: returend
   // for "Affordance Grounding from Demonstration": returned 
   // for "Affordance-Based_Goal_Imagination_for_Embodied_AI_Agents.pdf": returned 
-  // conclusion:   
+  // conclusion: -> not really reliable!
+  
   {
     id: "RQ3_PERFORMANCE_V1",
     name: "RQ3: Prompting Performance",
@@ -509,13 +513,11 @@ PROCEDURE:
     max_items: 5
   },
   // TEST:
-  // For 3D-AffordanceLLM: retuned 
-  // for A3VLM: returend
-  // for "Affordance Grounding from Demonstration": returned 
-  // for "Affordance-Based_Goal_Imagination_for_Embodied_AI_Agents.pdf": returned 
-  // conclusion:  
-
-  //maybe relate them to LLMs/VLMs? -> probably not intelligent to do so, as theses concepts are also important for non LLM generated Affordances
+  // For 3D-AffordanceLLM: retuned nothing
+  // for A3VLM: returend nonsense
+  // for "Affordance Grounding from Demonstration": returned nothing
+  // for "Affordance-Based_Goal_Imagination_for_Embodied_AI_Agents.pdf": returned seemed to kind of work
+  // conclusion:  -> seemed to work, but also sometimes halluzinate -> hence you need to strongly filter!
   {
     id: "RQ4_DETECTION_V1",
     name: "RQ4: Error Detection",
@@ -550,7 +552,7 @@ PROCEDURE:
   // for A3VLM: returend
   // for "Affordance Grounding from Demonstration": returned 
   // for "Affordance-Based_Goal_Imagination_for_Embodied_AI_Agents.pdf": returned 
-  // conclusion:  
+  // conclusion:  -> results seemed pretty similar for all of the 
 
   // not sure if the intetion of the question is "harmful use of affordances" or "harmful affordances" -> YOU ADJUSTED QUESTION TO "harmful affordances"
   {

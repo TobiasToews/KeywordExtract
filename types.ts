@@ -25,6 +25,7 @@ export interface Paper {
 
 export interface AnalysisResult {
   paperId: string;
+  paperName: string;
   promptId: string;
   rawResponse: string;
   parsedItems: ExtractedItem[];

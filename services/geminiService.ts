@@ -5,7 +5,8 @@ import { PromptTemplate, ExtractedItem, AnalysisResult } from "../types";
 export const runAnalysis = async (
   template: PromptTemplate,
   paperText: string,
-  paperId: string
+  paperId: string,
+  paperName: string
 ): Promise<AnalysisResult> => {
   const apiKey = process.env.API_KEY;
   if (!apiKey) {
@@ -75,6 +76,7 @@ export const runAnalysis = async (
 
   return {
     paperId,
+    paperName,
     promptId: template.id,
     rawResponse: rawText,
     parsedItems,

@@ -75,7 +75,7 @@ const App: React.FC = () => {
     for (const paper of pendingPapers) {
       try {
         setPapers(prev => prev.map(p => p.id === paper.id ? { ...p, status: 'processing' } : p));
-        const result = await runAnalysis(template, paper.fullText, paper.id);
+        const result = await runAnalysis(template, paper.fullText, paper.id, paper.fileName);
         setResults(prev => [...prev, result]);
         setPapers(prev => prev.map(p => p.id === paper.id ? { ...p, status: 'completed' } : p));
       } catch (err: any) {
@@ -99,10 +99,11 @@ const App: React.FC = () => {
   };
 
   const exportToCsv = () => {
-    const headers = ['Paper ID', 'Prompt ID', 'Keyword', 'Quote', 'Confidence', 'Model', 'Timestamp'];
+    const headers = ['Paper ID', 'Paper Name', 'Prompt ID', 'Keyword', 'Quote', 'Confidence', 'Model', 'Timestamp'];
     const rows = results.flatMap(res => 
       res.parsedItems.map(item => [
         res.paperId,
+        res.paperName,
         res.promptId,
         item.keyword,
         `"${item.quote.replace(/"/g, '""')}"`,
@@ -126,8 +127,8 @@ const App: React.FC = () => {
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-slate-200 p-6 flex flex-col space-y-8 shrink-0">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">A</div>
-          <h1 className="text-xl font-bold tracking-tight">AffordanceFlow</h1>
+          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">K</div>
+          <h1 className="text-xl font-bold tracking-tight">KeywordExtract</h1>
         </div>
 
         <nav className="flex-1 space-y-2">
@@ -246,7 +247,7 @@ const App: React.FC = () => {
                   <tbody className="divide-y divide-slate-100">
                     {papers.map(paper => (
                       <tr key={paper.id} className="hover:bg-slate-50">
-                        <td className="px-6 py-4 font-medium text-slate-700">{paper.fileName}</td>
+                        <td className="px-6 py-4 font-medium text-slate-700 max-w-xs truncate" title={paper.fileName}>{paper.fileName}</td>
                         <td className="px-6 py-4 text-sm text-slate-500">
                           {paper.fullText.length > 0 ? `${(paper.fullText.length / 1000).toFixed(1)}k chars` : 'Processing...'}
                         </td>

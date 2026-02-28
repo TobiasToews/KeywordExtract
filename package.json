@@ -1,5 +1,5 @@
 {
-  "name": "affordanceflow:-academic-extraction-pipeline",
+  "name": "keywordextract-academic-extraction-pipeline",
   "private": true,
   "version": "0.0.0",
   "type": "module",

@@ -1,5 +1,5 @@
 {
-  "name": "AffordanceFlow: Academic Extraction Pipeline",
+  "name": "KeywordExtract: Academic Extraction Pipeline",
   "description": "A robust research tool to ingest PDFs, run versioned prompt templates via Gemini, and export structured keyword-quote mappings to JSONL/CSV.",
   "requestFramePermissions": []
 }
