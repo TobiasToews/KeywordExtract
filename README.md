@@ -31,3 +31,9 @@ The tool is currently configured to extract information related to:
 -   **RQ2**: Role of affordances in Planning, Decision Making, and Imitation Learning.
 -   **RQ3**: Architectures, Datasets (construction & limitations), and Prompting Strategies for VLMs.
 -   **RQ4**: Hallucinations, Error Detection, and Safety Measures in affordance-based systems.
+
+## Overview of pages:
+<img width="1916" height="944" alt="image" src="https://github.com/user-attachments/assets/f3eba7a6-65e7-4758-8824-f8fc13644c3a" />
+<img width="1918" height="943" alt="image" src="https://github.com/user-attachments/assets/b761cd88-3171-4c1c-ad64-9a758cb84623" />
+<img width="1919" height="940" alt="image" src="https://github.com/user-attachments/assets/0820a7d2-36e1-4600-b19a-b48db3a66660" />
+<img width="1917" height="940" alt="image" src="https://github.com/user-attachments/assets/635174bc-8a10-4c77-970e-27fb48b34f9d" />
